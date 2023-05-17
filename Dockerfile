@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:alpine as production-stage
+FROM node:14-alpine as production-stage
 WORKDIR /app
 COPY --from=build-stage /app/package*.json ./
 RUN npm ci --only=production
