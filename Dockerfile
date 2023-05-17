@@ -1,26 +1,20 @@
-# using node alpine's official image 
-FROM node:14-alpine
-
-# setting the cwd in the container
-WORKDIR /usr/src/app
-
-# copying package.json file 
-COPY /nextjs_app/package*.json
-
-# installing dependencies
-RUN npm install 
-
-# copy everything in same cwd as Dockerfile
-COPY .
-
-# building the application
+# Build stage
+FROM node:14-alpine as build-stage
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
 RUN npm run build
 
-# setting the environment variable
-ENV NODE_ENV=production
+# Production stage
+FROM node:alpine as production-stage
+WORKDIR /app
+COPY --from=build-stage /app/package*.json ./
+RUN npm ci --only=production
+COPY --from=build-stage /app/.next ./.next
 
-# expose port 3000 for NextJS application
-EXPOSE 3000 
-
-# run app
+EXPOSE 3000
 CMD ["npm", "start"]
+
+# Separated the build stage from the production stage \n 
+# resulting in a smaller final image by excluding build-time dependencies.
