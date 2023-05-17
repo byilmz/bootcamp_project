@@ -9,6 +9,10 @@ variables:
   SSH_PRIVATE_KEY: <your_ssh_private_key>
 
 before_script:
+  - apt-get update -y
+  - apt-get install -y nodejs npm git docker.io
+  - curl -fsSL https://get.docker.com -o get-docker.sh
+  - sh get-docker.sh
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - eval $(ssh-agent -s)
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
