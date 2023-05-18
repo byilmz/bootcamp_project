@@ -13,6 +13,12 @@ COPY --from=build-stage /app/package*.json ./
 RUN npm ci --only=production
 COPY --from=build-stage /app/.next ./.next
 
+# Install AWS CLI
+RUN apk --no-cache update && \
+    apk --no-cache add --virtual build-deps py-pip python3-dev libffi-dev openssl-dev build-base && \
+    pip3 --no-cache-dir install awscli && \
+    apk --no-cache --purge del build-deps
+
 EXPOSE 3000
 CMD ["npm", "start"]
 
