@@ -23,7 +23,7 @@ before_script:
 build:
   stage: build
   script:
-    - npm ci
+    - npm install
 
 test:
   stage: test
