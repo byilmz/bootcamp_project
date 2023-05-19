@@ -34,7 +34,7 @@ test:
 deploy:
   stage: deploy
   # image: npm:latest
-  environment: production
+  # environment: production
   script:
     # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     # - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
@@ -43,5 +43,5 @@ deploy:
     # Replace /path/to/deploy/folder with the path to the folder where you want to deploy your Next.js application on the server.
     # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && git pull origin master"
     # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && npm ci && npm run build"
-    - npm run dev
+    # - npm run dev
     - echo "Application successfully deployed"
