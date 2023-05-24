@@ -13,7 +13,7 @@ variables:
 
 before_script:
   - apt-get update -y
-  - apt-get install -y nodejs npm git docker.io python3 python3-pip
+  - apt-get install -y nodejs npm git docker.io python3 python3-pip next
   # - curl -fsSL https://get.docker.com -o get-docker.sh
   # - sh get-docker.sh
   # - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
@@ -22,18 +22,20 @@ before_script:
 
 build:
   stage: build
+  image: rb07/events_app:v1
   script:
-    - npm install
+    - npm ci
 
 test:
   stage: test
+  image: rb07/events_app:v1
   script:
     - echo "running unit tests..."
-    # - npm run test
+    - npm run test
 
 deploy:
   stage: deploy
-  # image: npm:latest
+  image: rb07/events_app:v1
   # environment: production
   script:
     # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
@@ -43,5 +45,5 @@ deploy:
     # Replace /path/to/deploy/folder with the path to the folder where you want to deploy your Next.js application on the server.
     # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && git pull origin master"
     # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && npm ci && npm run build"
-    # - npm run dev
+    - npm run dev
     - echo "Application successfully deployed"
