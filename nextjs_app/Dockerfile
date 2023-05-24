@@ -2,7 +2,8 @@
 FROM node:14-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN apk update && apk add --no-cache nodejs git npm python3
+RUN npm install --global next
 COPY . .
 RUN npm run build
 
