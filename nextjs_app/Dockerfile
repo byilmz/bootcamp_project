@@ -1,18 +1,20 @@
 # Build stage
-FROM node:14-alpine as build-stage
+FROM node:14-alpine
 WORKDIR /app
-COPY package*.json ./
-RUN apk update && apk add --no-cache nodejs git npm python3
-RUN npm install --global next
+# COPY package*.json ./
+# RUN apk update && apk add --no-cache nodejs git npm python3
+# RUN npm install --global next
 COPY . .
+RUN npm install
 RUN npm run build
 
 # Production stage
-FROM node:14-alpine as production-stage
-WORKDIR /app
-COPY --from=build-stage /app/package*.json ./
-RUN npm ci --only=production
-COPY --from=build-stage /app/.next ./.next
+# FROM node:14-alpine as production-stage
+# WORKDIR /app
+# COPY --from=build-stage /app/package*.json ./
+# RUN npm ci --only=production
+# COPY --from=build-stage /app/.next ./.next
+# COPY --from=build-stage /app/node_modules ./node_modules
 
 # Install AWS CLI
 RUN apk --no-cache update && \
