@@ -1,4 +1,4 @@
-APP_NAME=next_test
+APP_NAME=events_app
 VERSION=1
 
 build: 
