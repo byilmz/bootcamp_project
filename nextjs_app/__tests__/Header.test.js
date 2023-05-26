@@ -1,6 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Header from '../components/header';
+import renderer from 'react-test-renderer';
+
+import Header from '../src/components/header/header';
 
 test('renders header correctly', () => {
   render(<Header />);
@@ -10,4 +12,5 @@ test('renders header correctly', () => {
   expect(logoElement).toBeInTheDocument();
   
   // Additional test cases for other elements or behavior in the header component
-});
+}
+);
