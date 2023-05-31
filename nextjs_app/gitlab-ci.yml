@@ -20,14 +20,14 @@ before_script:
 
 build:
   stage: build
-  image: rb07/events_app:v3
+  image: rb07/events_app:3
   script:
     - cd ./nextjs_app
     - npm ci
 
 test:
   stage: test
-  image: rb07/events_app:v3
+  image: rb07/events_app:3
   script:
     - cd ./nextjs_app
     - echo "running unit tests..."
@@ -35,7 +35,7 @@ test:
 
 deploy:
   stage: deploy
-  image: rb07/events_app:v3
+  image: rb07/events_app:3
   # environment: production
   script:
     # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID

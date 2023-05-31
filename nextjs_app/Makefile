@@ -1,4 +1,4 @@
-APP_NAME=events_app
+APP_NAME=rb07/events_app
 VERSION=3
 
 build: 
