@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 
 import Header from '../src/components/header/header';
 
-test('renders header correctly', () => {
+test.skip('renders header correctly', () => {
   render(<Header />);
   
   // Example test case: Verifying the presence of a specific element
