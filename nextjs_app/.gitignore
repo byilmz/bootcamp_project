@@ -18,3 +18,35 @@ yarn-error.log
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.backup
+*.tfstate.backup.*
+
+# Crash log files
+crash.log
+
+# Exclude all .tfvars files, which may contain sensitive information
+*.tfvars
+
+# Ignore override files as they are typically used to override resources in different environments
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration file
+.terraformrc
+
+# Ignore Terraform plan output files
+*.tfplan
+
+# Ignore any .terraform.lock.hcl file
+.terraform.lock.hcl
+
+# Ignore provider plugin binaries
+*.terraform/providers/*
