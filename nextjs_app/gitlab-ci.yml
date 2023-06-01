@@ -33,6 +33,15 @@ test:
     - echo "running unit tests..."
     # - npm run test
 
+infrastructure:
+  stage: infrastructure
+  image: hashicorp/terraform:light
+  script:
+    - cd ./nextjs_app
+    - terraform init
+    - terraform plan -out=tfplan
+    - terraform apply -auto-approve tfplan
+
 deploy:
   stage: deploy
   image: rb07/events_app:v3
