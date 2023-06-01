@@ -1,5 +1,5 @@
 APP_NAME=rb07/events_app
-VERSION=3
+VERSION=v3
 
 build: 
 	docker build -t $(APP_NAME):$(VERSION) .  
