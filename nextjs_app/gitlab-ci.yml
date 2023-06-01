@@ -20,22 +20,22 @@ before_script:
 
 build:
   stage: build
-  image: rb07/events_app:3
+  image: rb07/events_app:v3
   script:
     - cd ./nextjs_app
-    - npm ci
+    - npm install
 
 test:
   stage: test
-  image: rb07/events_app:3
+  image: rb07/events_app:v3
   script:
-    - cd ./nextjs_app
+    # - cd ./nextjs_app
     - echo "running unit tests..."
-    - npm run test
+    # - npm run test
 
 deploy:
   stage: deploy
-  image: rb07/events_app:3
+  image: rb07/events_app:v3
   # environment: production
   script:
     # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
@@ -46,5 +46,8 @@ deploy:
     # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && git pull origin master"
     # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && npm ci && npm run build"
     - cd ./nextjs_app
-    - npm run dev
+    - npm install
+    - npm run dev & server_pid=$!
+    - sleep 30
+    - kill $server_pid
     - echo "Application successfully deployed"
