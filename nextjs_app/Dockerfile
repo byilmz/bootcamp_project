@@ -4,9 +4,15 @@ WORKDIR /app
 # COPY package*.json ./
 # RUN apk update && apk add --no-cache nodejs git npm python3
 # RUN npm install --global next
+RUN apk update && apk add --no-cache curl jq wget unzip
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
+    unzip ngrok-stable-linux-amd64.zip && \
+    rm ngrok-stable-linux-amd64.zip && \
+    chmod +x ngrok
 COPY . .
 RUN npm install
 RUN npm run build
+RUN 
 
 # Production stage
 # FROM node:14-alpine as production-stage
