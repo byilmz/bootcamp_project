@@ -3,60 +3,45 @@ stages:
   - test
   - deploy
 
-variables:
-  APP_NAME: nextjs_app
-  # Replace <your_ssh_private_key> with the contents of your SSH private key.
-  # SSH_PRIVATE_KEY: <your_ssh_private_key>
-  # AWS_ACCESS_KEY_ID: <your_aws_access_key>
-  # AWS_SECRET_ACCESS_KEY: <your_aws_secret_access_key>
-  # AWS_REGION: <your_aws_region>
-
-before_script:
-  # - curl -fsSL https://get.docker.com -o get-docker.sh
-  # - sh get-docker.sh
-  # - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-  # - eval $(ssh-agent -s)
-  # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-
 build:
   stage: build
-  image: rb07/events_app:v3
+  image: docker:dind
   script:
     - cd ./nextjs_app
-    - npm install
+    - docker build -t rb07/events_app:$CI_PIPELINE_IID .
+    - mkdir $CI_PROJECT_DIR/images
+    - docker save -o $CI_PROJECT_DIR/images/events_app.tar rb07/events_app:$CI_PIPELINE_IID
+  artifacts:    
+    paths:
+      - images/
+  services:
+    - docker:dind
 
 test:
   stage: test
-  image: rb07/events_app:v3
+  image: docker:dind
+  dependencies:
+    - build
   script:
-    # - cd ./nextjs_app
+    - docker load -i $CI_PROJECT_DIR/images/events_app.tar
+    - docker run rb07/events_app:$CI_PIPELINE_IID npm run test
     - echo "running unit tests..."
-    # - npm run test
-
-infrastructure:
-  stage: infrastructure
-  image: hashicorp/terraform:light
-  script:
-    - cd ./nextjs_app
-    - terraform init
-    - terraform plan -out=tfplan
-    - terraform apply -auto-approve tfplan
 
 deploy:
-  stage: deploy
-  image: rb07/events_app:v3
-  # environment: production
+  stage: deploy_app
+  image: docker:dind
+  services:
+    - docker:dind
+  dependencies:
+    - build
   script:
-    # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    # - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    # - aws configure set region $AWS_REGION
-    # Replace <your_ssh_user> with your SSH username <your_server_address> with the address of your deployment server.
-    # Replace /path/to/deploy/folder with the path to the folder where you want to deploy your Next.js application on the server.
-    # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && git pull origin master"
-    # - ssh <your_ssh_user>@<your_server_address> "cd /path/to/deploy/folder && npm ci && npm run build"
+    - docker load -i $CI_PROJECT_DIR/images/events_app.tar
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - docker push rb07/events_app:$CI_PIPELINE_IID
     - cd ./nextjs_app
-    - npm install
-    - npm run dev & server_pid=$!
+    - docker run rb07/events_app:$CI_PIPELINE_IID & server_pid=$!
     - sleep 30
     - kill $server_pid
     - echo "Application successfully deployed"
+
+
